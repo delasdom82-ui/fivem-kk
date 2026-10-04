@@ -1,0 +1,26 @@
+name: Deploy FiveM
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:   # deixa rodar manual também
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Deploy via SFTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: sftp          # ou ftp se o host não tiver sftp
+          port: 22               # muda se o seu host usar outra porta
+          local-dir: ./          # pasta do repo
+          server-dir: /resources/  # caminho no servidor onde ficam os resources (ajusta pro seu)
+          dangerous-clean-slate: false
